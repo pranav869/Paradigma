@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradigma Architects | Designing Timeless Spaces</title>
+
+    <style>
+        /* --- FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+        /* --- CSS VARIABLES --- */
+        :root {
+            /* Colors */
+            --color-primary: #111111;
+            --color-secondary: #6B6B6B;
+            --color-light: #F8F7F4;
+            --color-white: #FFFFFF;
+
+            /* Accents */
+            --color-terracotta: #E2725B;
+            --color-warm-stone: #A99E94;
+            --color-wood: #C19A6B;
+
+            /* Typography */
+            --font-heading: 'Neue Haas Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Transitions */
+            --transition-smooth: cubic-bezier(0.76, 0, 0.24, 1);
+
+            /* Layout */
+            --container-width: 1400px;
+            --padding-x: 5vw;
+        }
+
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-light);
+            color: var(--color-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* Hide default cursor for custom cursor */
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        a,
+        button {
+            cursor: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            /* removes inline-image whitespace gap */
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--color-terracotta);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s var(--transition-smooth), height 0.3s var(--transition-smooth), background-color 0.3s ease;
+        }
+
+        .custom-cursor.hovered {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.8);
+            mix-blend-mode: difference;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-x);
+        }
+
+        .section {
+            padding: 10vw 0;
+        }
+
+        /* Glass Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem var(--padding-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 9998;
+            /* Fully transparent over the hero */
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: 1px solid transparent;
+            transition:
+                padding 0.5s var(--transition-smooth),
+                background 0.6s ease,
+                backdrop-filter 0.6s ease,
+                border-color 0.6s ease,
+                transform 0.4s var(--transition-smooth);
+            color: #fff;
+        }
+
+        /* Translucent dark glass when scrolled past hero */
+        .navbar.scrolled {
+            padding: 1.2rem var(--padding-x);
+            background: rgba(12, 12, 12, 0.60);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom-color: rgba(255, 255, 255, 0.10);
+        }
+
+        /* Hide navbar when scrolling down, reveal when scrolling up.
+           Disabled while the mobile menu is open (see .navbar--menu-open). */
+        .navbar--hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--transition-smooth);
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 2.5rem;
+            background-color: var(--color-primary);
+            color: var(--color-light);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: none;
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            transition: color 0.4s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-terracotta);
+            border-radius: 50%;
+            transition: transform 0.5s var(--transition-smooth);
+        }
+
+        .btn:hover::before {
+            transform: translateY(-100%) scale(1.5);
+            border-radius: 0;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- MOBILE NAV TOGGLE (hamburger) --- */
+        .nav-toggle {
+            display: none;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            margin: 0;
+            background: none;
+            border: none;
+            padding: 0;
+            align-self: center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-toggle span {
+            display: block;
+            height: 2px;
+            width: 26px;
+            background-color: currentColor;
+            border-radius: 2px;
+            transition: transform 0.4s var(--transition-smooth), opacity 0.3s ease, width 0.3s ease;
+        }
+
+        .nav-toggle span:nth-child(2) {
+            width: 18px;
+            align-self: flex-end;
+        }
+
+        /* Hamburger -> X animation when menu is open */
+        .navbar--menu-open .nav-toggle span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .navbar--menu-open .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .navbar--menu-open .nav-toggle span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+            width: 26px;
+        }
+
+        /* Keep navbar visible (not hidden/translated) while menu is open */
+        .navbar--menu-open {
+            transform: translateY(0) !important;
+            background: rgba(12, 12, 12, 0.60);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* --- MOBILE MENU OVERLAY --- */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 9997;
+            background-color: #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8vw;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .mobile-menu.is-open {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-menu-links a {
+            font-family: var(--font-heading);
+            font-size: 12vw;
+            font-weight: 500;
+            color: var(--color-light);
+            display: inline-block;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: transform 0.6s var(--transition-smooth), opacity 0.6s ease;
+        }
+
+        .mobile-menu.is-open .mobile-menu-links a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-menu.is-open .mobile-menu-links a:nth-child(1) { transition-delay: 0.05s; }
+        .mobile-menu.is-open .mobile-menu-links a:nth-child(2) { transition-delay: 0.12s; }
+        .mobile-menu.is-open .mobile-menu-links a:nth-child(3) { transition-delay: 0.19s; }
+        .mobile-menu.is-open .mobile-menu-links a:nth-child(4) { transition-delay: 0.26s; }
+
+        .mobile-menu-footer {
+            position: absolute;
+            bottom: 3rem;
+            left: 8vw;
+            right: 8vw;
+            display: flex;
+            justify-content: space-between;
+            color: var(--color-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Smooth Scroll (Lenis fixes) */
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            background-color: #111111;
+            background-image:
+                linear-gradient(to bottom, rgba(10, 10, 10, 0.25) 0%, rgba(10, 10, 10, 0.65) 100%),
+                url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--color-white);
+            z-index: 10;
+            padding: 0 var(--padding-x);
+        }
+
+        .hero-title {
+            font-size: 8vw;
+            line-height: 1;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title span {
+            display: inline-block;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        /* --- PROJECTS SECTION --- */
+        .projects-section {
+            background-color: #171513;
+            /* Very dark warm gray to match screenshot */
+            color: var(--color-light);
+        }
+
+        .projects-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.8rem;
+            color: var(--color-wood);
+            /* Gold/Mustard color from screenshot */
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: #e6e4df;
+            /* Off white cream */
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5vw;
+            margin-bottom: 5rem;
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            aspect-ratio: 4/3;
+            background: #000;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s var(--transition-smooth);
+            opacity: 0.8;
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .project-category {
+            font-size: 0.7rem;
+            color: var(--color-wood);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #fff;
+            font-family: var(--font-heading);
+        }
+
+        .projects-action {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--color-wood);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #b0895c;
+        }
+
+        /* --- ABOUT / STATS --- */
+        .about-section {
+            background-color: var(--color-light);
+            color: var(--color-primary);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10vw;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .about-text p {
+            font-size: 1.2rem;
+            color: var(--color-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .stat-item h4 {
+            font-size: 4rem;
+            color: var(--color-terracotta);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--color-primary);
+            color: var(--color-light);
+            padding: 6rem var(--padding-x) 2rem;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .footer-brand h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--color-secondary);
+            max-width: 400px;
+        }
+
+        .footer-links h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-links ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--color-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-terracotta);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--color-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 1024px) {
+            :root {
+                --padding-x: 6vw;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3vw;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 5rem;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Hide custom cursor on mobile to fallback to default touch */
+            .custom-cursor {
+                display: none !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            a,
+            button {
+                cursor: pointer;
+            }
+
+            .navbar {
+                padding: 1.1rem 6vw;
+                align-items: center;
+            }
+
+            /* Swap the inline desktop links for the hamburger trigger */
+            .nav-links {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-logo {
+                font-size: 1.2rem;
+            }
+
+            .section {
+                padding: 20vw 0;
+            }
+
+            .hero-title {
+                font-size: 15vw;
+            }
+
+            .hero-sub {
+                font-size: 0.9rem;
+                letter-spacing: 0.1em;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .project-card {
+                aspect-ratio: auto;
+                min-height: 400px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .btn-primary {
+                width: 100%;
+                text-align: center;
+            }
+
+            .project-overlay {
+                padding: 1.5rem;
+            }
+
+            .project-title {
+                font-size: 1.5rem;
+            }
+
+            .mobile-menu-links a {
+                font-size: 13vw;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .mobile-menu-links a {
+                font-size: 11vw;
+            }
+
+            .mobile-menu-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">PARADIGMA.</a>
+        <div class="nav-links">
+            <a href="#projects">Projects</a>
+            <a href="#about">Studio</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-menu-links">
+            <a href="#projects">Projects</a>
+            <a href="#about">Studio</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="mobile-menu-footer">
+            <span>&copy; 2026 Paradigma</span>
+            <span>Chennai, India</span>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span>Designing</span><br>
+                <span>Timeless Spaces.</span>
+            </h1>
+            <p class="hero-sub">Architecture • Interior • Landscape</p>
+            <a href="#projects" class="btn"><span>View Projects</span></a>
+        </div>
+    </header>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="container">
+            <div class="projects-header">
+                <p class="section-subtitle">FEATURED WORK</p>
+                <h2 class="section-title">A portfolio of spaces<br>that redefine luxury.</h2>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+                        alt="KAD Residence">
+                    <div class="project-overlay">
+                        <p class="project-category">RESIDENTIAL · ARCHITECTURE</p>
+                        <h3 class="project-title">KAD Residence</h3>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80"
+                        alt="VI Villa">
+                    <div class="project-overlay">
+                        <p class="project-category">VILLA · TURNKEY</p>
+                        <h3 class="project-title">VI Villa</h3>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"
+                        alt="CWS Commercial">
+                    <div class="project-overlay">
+                        <p class="project-category">COMMERCIAL · DESIGN</p>
+                        <h3 class="project-title">CWS Commercial</h3>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+                        alt="LP Villa">
+                    <div class="project-overlay">
+                        <p class="project-category">VILLA · INTERIORS</p>
+                        <h3 class="project-title">LP Villa</h3>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80"
+                        alt="RM Residence">
+                    <div class="project-overlay">
+                        <p class="project-category">RESIDENTIAL · ARCHITECTURE</p>
+                        <h3 class="project-title">RM Residence</h3>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=800&q=80"
+                        alt="ENT Hospitality">
+                    <div class="project-overlay">
+                        <p class="project-category">HOSPITALITY · INTERIOR</p>
+                        <h3 class="project-title">ENT Hospitality</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projects-action">
+                <a href="#" class="btn-primary">VIEW ALL PROJECTS &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container about-grid">
+            <div class="about-text">
+                <h2>A philosophy built<br>on minimal luxury.</h2>
+                <p>At Paradigma Architects, we believe that great architecture balances form, function, and environment.
+                    We deliver state-of-the-state residential and commercial structures engineered for modern
+                    lifestyles.</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="15">0</h4>
+                        <p>Years Experience</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="120">0</h4>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="25">0</h4>
+                        <p>Awards Won</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="8">0</h4>
+                        <p>Cities Served</p>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80"
+                    alt="Studio Director">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2>PARADIGMA.</h2>
+                    <p>Designing the spaces of tomorrow through a lens of timeless minimalism and uncompromising
+                        quality.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#about">Studio</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="pages/dashboard.html">Admin Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Social</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Pinterest</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Paradigma Architects. All rights reserved.</p>
+                <p>Designed with precision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Initialize Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const links = document.querySelectorAll('a, button');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1,
+                ease: "power2.out"
+            });
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovered');
+            });
+            link.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovered');
+            });
+        });
+
+        // Entry Animation (Hero Section)
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+
+            tl.from('.hero-title span', {
+                y: '100%',
+                duration: 1.5,
+                ease: 'power4.out',
+                stagger: 0.1,
+                opacity: 0
+            })
+            .from('.hero-sub', {
+                opacity: 0,
+                y: 20,
+                duration: 1
+            }, "-=1")
+            // Navbar stays visible and just slides down slightly, so
+            // there's never a moment where it disappears entirely.
+            .from('.navbar', {
+                y: -20,
+                duration: 0.8
+            }, "-=1");
+        });
+
+        // Navbar Scroll Effect (background/blur toggle + hide-on-scroll-down)
+        let lastScrollY = window.scrollY;
+        const navbarEl = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // Don't fight the mobile menu's own state while it's open
+            if (navbarEl.classList.contains('navbar--menu-open')) return;
+
+            if (currentScrollY > 50) {
+                navbarEl.classList.add('scrolled');
+            } else {
+                navbarEl.classList.remove('scrolled');
+            }
+
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                navbarEl.classList.add('navbar--hidden');
+            } else {
+                navbarEl.classList.remove('navbar--hidden');
+            }
+
+            lastScrollY = currentScrollY;
+        });
+
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-links a');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('is-open');
+            navbarEl.classList.add('navbar--menu-open');
+            navbarEl.classList.remove('navbar--hidden');
+            navToggle.setAttribute('aria-expanded', 'true');
+            lenis.stop();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('is-open');
+            navbarEl.classList.remove('navbar--menu-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            lenis.start();
+            document.body.style.overflow = '';
+        }
+
+        navToggle.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.contains('is-open');
+            isOpen ? closeMobileMenu() : openMobileMenu();
+        });
+
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close mobile menu if resized back to desktop width
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('is-open')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Number counter animation in About section
+        gsap.utils.toArray('.stat-item').forEach(item => {
+            let counter = item.querySelector('.counter');
+            let target = parseInt(counter.getAttribute('data-target'));
+
+            ScrollTrigger.create({
+                trigger: item,
+                start: "top 80%",
+                onEnter: () => {
+                    let obj = { val: 0 };
+                    gsap.to(obj, {
+                        val: target,
+                        duration: 2,
+                        ease: "power2.out",
+                        onUpdate: () => {
+                            counter.innerHTML = Math.floor(obj.val) + (target > 100 ? "+" : "");
+                        }
+                    });
+                },
+                once: true
+            });
+        });
+
+        // Project filtering mock
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                let filter = btn.getAttribute('data-filter');
+                let cards = document.querySelectorAll('.project-card');
+
+                gsap.to(cards, {
+                    opacity: 0,
+                    scale: 0.9,
+                    duration: 0.3,
+                    stagger: 0.05,
+                    onComplete: () => {
+                        cards.forEach(card => {
+                            if (filter === 'all' || card.classList.contains(filter)) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                        gsap.to(cards, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.3,
+                            stagger: 0.05,
+                            clearProps: "all"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
