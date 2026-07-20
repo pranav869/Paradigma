@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Load Projects
+    // Load Projects (Home Page - Limited to 6)
     async function loadProjects() {
         const projectsGrid = document.getElementById('dynamic-projects-grid');
         if (!projectsGrid) return;
@@ -222,7 +222,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { data: projects, error } = await supabase
             .from('projects')
             .select('*')
-            .order('order', { ascending: true });
+            .order('order', { ascending: true })
+            .limit(6);
             
         projectsGrid.innerHTML = '';
         
@@ -239,13 +240,102 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="project-overlay">
                     <p class="project-category">${project.category || ''}</p>
                     <h3 class="project-title">${project.title || ''}</h3>
+                    <div class="project-details">
+                        <p class="project-meta">
+                            ${project.location ? `<span class="proj-loc">${project.location}</span>` : ''}
+                            ${project.location && project.completionYear ? ' &bull; ' : ''}
+                            ${project.completionYear ? `<span class="proj-year">${project.completionYear}</span>` : ''}
+                        </p>
+                        ${project.description ? `<p class="project-desc">${project.description}</p>` : ''}
+                    </div>
                 </div>
             `;
             projectsGrid.appendChild(card);
         });
     }
 
+    // Load All Projects (Projects Page - with categories)
+    async function loadAllProjects() {
+        const allProjectsGrid = document.getElementById('all-projects-grid');
+        const categoryFilters = document.getElementById('category-filters');
+        if (!allProjectsGrid) return;
+
+        const { data: projects, error } = await supabase
+            .from('projects')
+            .select('*')
+            .order('order', { ascending: true });
+            
+        allProjectsGrid.innerHTML = '';
+        
+        if (error || !projects || projects.length === 0) {
+            allProjectsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-secondary);">No projects available.</p>';
+            return;
+        }
+
+        // Render projects
+        function renderProjects(filterCategory = 'ALL') {
+            allProjectsGrid.innerHTML = '';
+            const filtered = filterCategory === 'ALL' 
+                ? projects 
+                : projects.filter(p => (p.category || '').toUpperCase() === filterCategory.toUpperCase());
+                
+            if (filtered.length === 0) {
+                allProjectsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-secondary);">No projects found in this category.</p>';
+                return;
+            }
+            
+            filtered.forEach((project) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <img src="${project.imageUrl || ''}" alt="${project.title || ''}">
+                    <div class="project-overlay">
+                        <p class="project-category">${project.category || ''}</p>
+                        <h3 class="project-title">${project.title || ''}</h3>
+                        <div class="project-details">
+                            <p class="project-meta">
+                                ${project.location ? `<span class="proj-loc">${project.location}</span>` : ''}
+                                ${project.location && project.completionYear ? ' &bull; ' : ''}
+                                ${project.completionYear ? `<span class="proj-year">${project.completionYear}</span>` : ''}
+                            </p>
+                            ${project.description ? `<p class="project-desc">${project.description}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+                allProjectsGrid.appendChild(card);
+            });
+        }
+        
+        // Setup filters if they exist
+        if (categoryFilters) {
+            // Get unique categories
+            const categories = new Set(['ALL']);
+            projects.forEach(p => {
+                if(p.category) categories.add(p.category.toUpperCase());
+            });
+            
+            categoryFilters.innerHTML = '';
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = cat;
+                if (cat === 'ALL') btn.classList.add('active');
+                
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderProjects(cat);
+                });
+                
+                categoryFilters.appendChild(btn);
+            });
+        }
+
+        renderProjects();
+    }
+
     // Fetch initial data
     await loadSettings();
     await loadProjects();
+    await loadAllProjects();
 });

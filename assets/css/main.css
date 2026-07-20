@@ -307,6 +307,41 @@ a {
     margin-top: 2.5rem;
 }
 
+/* --- CATEGORY FILTERS --- */
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    justify-content: flex-start;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.category-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-secondary);
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: -1px; /* Overlap border */
+    transition: color 0.3s ease;
+}
+
+.category-btn:hover {
+    color: var(--color-primary);
+}
+
+.category-btn.active {
+    color: var(--color-wood);
+    border-bottom: 2px solid var(--color-wood);
+}
+
 /* Smooth Scroll (Lenis fixes) */
 html.lenis {
     height: auto;

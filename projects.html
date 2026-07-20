@@ -12,6 +12,13 @@
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        /* Force navbar to have dark text on this page since there is no dark hero section */
+        .navbar { color: var(--color-primary); }
+        .navbar.scrolled { color: var(--color-light); }
+        .hamburger span { background-color: var(--color-primary); }
+        .navbar.scrolled .hamburger span { background-color: var(--color-light); }
+    </style>
 </head>
 
 <body>
@@ -54,74 +61,22 @@
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="hero-video-wrap parallax-bg">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
-                alt="Architecture" class="hero-video">
-            <!-- If using a real video: -->
-            <!-- <video autoplay loop muted playsinline class="hero-video">
-                <source src="assets/images/architecture.mp4" type="video/mp4">
-            </video> -->
-        </div>
-        <div class="hero-content">
-            <h1 class="hero-title">
-                <span>Designing</span><br>
-                <span>Timeless Spaces.</span>
-            </h1>
-            <p class="hero-sub">Architecture • Interior • Landscape</p>
-            <a href="#projects" class="btn"><span>View Projects</span></a>
-        </div>
-    </header>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section projects-section">
+
+    <!-- All Projects Section -->
+    <section id="projects" class="section projects-section" style="padding-top: 8rem;">
         <div class="container">
             <div class="projects-header">
                 <p class="section-subtitle">FEATURED WORK</p>
                 <h2 class="section-title">A portfolio of spaces<br>that redefine luxury.</h2>
             </div>
-
-            <div class="projects-grid" id="dynamic-projects-grid">
-                <!-- Projects will be loaded here dynamically from Firebase -->
+            <!-- Category Filters Container -->
+            <div id="category-filters" class="category-filters">
+                <!-- Buttons will be injected here dynamically -->
             </div>
 
-            <div class="projects-action">
-                <a href="projects.html" class="btn-primary">VIEW ALL PROJECTS &rarr;</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section about-section">
-        <div class="container about-grid">
-            <div class="about-text">
-                <h2>A philosophy built<br>on minimal luxury.</h2>
-                <p>At Paradigma Architects, we believe that great architecture balances form, function, and environment.
-                    We deliver state-of-the-state residential and commercial structures engineered for modern
-                    lifestyles.</p>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <h4 class="counter" data-target="15">0</h4>
-                        <p>Years Experience</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4 class="counter" data-target="120">0</h4>
-                        <p>Projects Completed</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4 class="counter" data-target="25">0</h4>
-                        <p>Awards Won</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4 class="counter" data-target="8">0</h4>
-                        <p>Cities Served</p>
-                    </div>
-                </div>
-            </div>
-            <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80"
-                    alt="Studio Director">
+            <div class="projects-grid" id="all-projects-grid">
+                <!-- Projects will be loaded here dynamically from Supabase -->
             </div>
         </div>
     </section>
