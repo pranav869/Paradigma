@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Paradigma Architects</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        body {
+            background-color: var(--color-light);
+            cursor: default; /* disable custom cursor for admin */
+            overflow: auto; /* disable lenis for admin */
+        }
+        
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--color-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .login-box {
+            background: var(--color-white);
+            padding: 3rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-box h2 {
+            color: var(--color-primary);
+            margin-bottom: 2rem;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .login-box button:hover {
+            opacity: 0.9;
+        }
+        #login-error {
+            color: red;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none; /* hidden until authenticated */
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--color-primary);
+            color: var(--color-light);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            letter-spacing: 0.1em;
+        }
+
+        .sidebar ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar a {
+            color: var(--color-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 10px 0;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            color: var(--color-terracotta);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 3rem 4rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .top-bar h1 {
+            font-size: 2.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: var(--font-heading);
+            font-weight: 500;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+        }
+
+        .section-view {
+            display: none;
+        }
+        .section-view.active {
+            display: block;
+        }
+
+        .content-card {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        th {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .project-img-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-small.danger {
+            background: #dc3545;
+        }
+        .btn-small.secondary {
+            background: var(--color-secondary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>PARADIGMA CMS</h2>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Log In</button>
+            </form>
+            <div id="login-error">Invalid username or password.</div>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard" id="dashboard-content">
+        <aside class="sidebar">
+            <h2>PARADIGMA<br><span style="color:var(--color-terracotta); font-size:1rem;">CMS</span></h2>
+            <ul>
+                <li><a href="#" class="nav-link active" data-target="view-projects">Manage Projects</a></li>
+                <li><a href="#" class="nav-link" data-target="view-settings">Site Settings</a></li>
+                <li><a href="../index.html">← Back to Site</a></li>
+                <li><a href="#" id="logout-btn" style="color: #dc3545; margin-top: 2rem;">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 id="page-title">Manage Projects</h1>
+                <div class="user-profile">
+                    <span>Admin User</span>
+                    <div class="avatar">A</div>
+                </div>
+            </div>
+
+            <!-- Projects View -->
+            <div id="view-projects" class="section-view active">
+                <div class="content-card">
+                    <div class="content-header">
+                        <h2>All Projects</h2>
+                        <button class="btn-small" id="btn-add-project">+ Add New</button>
+                    </div>
+                    <table id="projects-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Order</th>
+                                <th>Project Name</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projects-tbody">
+                            <tr>
+                                <td colspan="5">Loading projects...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="view-settings" class="section-view">
+                <div class="content-card">
+                    <h2>Site Settings</h2>
+                    <form id="settings-form" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="set-company" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="set-email">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="set-phone">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp Number</label>
+                            <input type="text" id="set-whatsapp">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea id="set-address" rows="3"></textarea>
+                        </div>
+                        
+                        <h3 style="margin: 2rem 0 1rem;">Social Links</h3>
+                        <div class="form-group">
+                            <label>Instagram URL</label>
+                            <input type="url" id="set-instagram">
+                        </div>
+                        <div class="form-group">
+                            <label>LinkedIn URL</label>
+                            <input type="url" id="set-linkedin">
+                        </div>
+                        <div class="form-group">
+                            <label>Pinterest URL</label>
+                            <input type="url" id="set-pinterest">
+                        </div>
+                        <div class="form-group">
+                            <label>Twitter URL</label>
+                            <input type="url" id="set-twitter">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-small" id="btn-save-settings">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Add Project</h2>
+            <form id="project-form">
+                <input type="hidden" id="proj-id">
+                <input type="hidden" id="proj-image-path">
+                <input type="hidden" id="proj-image-url">
+                
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="proj-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Category (e.g. RESIDENTIAL · ARCHITECTURE)</label>
+                    <input type="text" id="proj-category" required>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="proj-location">
+                </div>
+                <div class="form-group">
+                    <label>Completion Year</label>
+                    <input type="text" id="proj-year">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="proj-desc" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Order (Number, lower means first)</label>
+                    <input type="number" id="proj-order" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <input type="file" id="proj-image" accept="image/*">
+                    <div id="image-preview-container" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-small secondary" id="btn-cancel-modal">Cancel</button>
+                    <button type="submit" class="btn-small" id="btn-save-project">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Custom Scripts -->
+    <script src="../assets/js/supabase-config.js"></script>
+    <script src="../assets/js/admin-auth.js"></script>
+    <script src="../assets/js/admin.js"></script>
+    <script src="../assets/js/admin-settings.js"></script>
+
+    <script>
+        // Simple tab switching logic
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Update active link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // Update page title
+                document.getElementById('page-title').textContent = link.textContent;
+
+                // Show target view
+                const targetId = link.getAttribute('data-target');
+                document.querySelectorAll('.section-view').forEach(view => {
+                    view.classList.remove('active');
+                });
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

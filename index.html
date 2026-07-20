@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradigma Architects | Designing Timeless Spaces</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="image.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+
+<body>
+
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">PARADIGMA.</a>
+        <div class="nav-links">
+            <a href="#projects">Projects</a>
+            <a href="#about">Studio</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-mobile-actions">
+            <a href="#contact" class="btn-consult">Consult</a>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-links">
+            <a href="#">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="mobile-menu-bottom">
+            <a href="#contact" class="btn-consult-large">Consult Now</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-video-wrap parallax-bg">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
+                alt="Architecture" class="hero-video">
+            <!-- If using a real video: -->
+            <!-- <video autoplay loop muted playsinline class="hero-video">
+                <source src="assets/images/architecture.mp4" type="video/mp4">
+            </video> -->
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span>Designing</span><br>
+                <span>Timeless Spaces.</span>
+            </h1>
+            <p class="hero-sub">Architecture • Interior • Landscape</p>
+            <a href="#projects" class="btn"><span>View Projects</span></a>
+        </div>
+    </header>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="container">
+            <div class="projects-header">
+                <p class="section-subtitle">FEATURED WORK</p>
+                <h2 class="section-title">A portfolio of spaces<br>that redefine luxury.</h2>
+            </div>
+
+            <div class="projects-grid" id="dynamic-projects-grid">
+                <!-- Projects will be loaded here dynamically from Firebase -->
+            </div>
+
+            <div class="projects-action">
+                <a href="#" class="btn-primary">VIEW ALL PROJECTS &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container about-grid">
+            <div class="about-text">
+                <h2>A philosophy built<br>on minimal luxury.</h2>
+                <p>At Paradigma Architects, we believe that great architecture balances form, function, and environment.
+                    We deliver state-of-the-state residential and commercial structures engineered for modern
+                    lifestyles.</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="15">0</h4>
+                        <p>Years Experience</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="120">0</h4>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="25">0</h4>
+                        <p>Awards Won</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter" data-target="8">0</h4>
+                        <p>Cities Served</p>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80"
+                    alt="Studio Director">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2 id="footer-company-name">PARADIGMA.</h2>
+                    <p id="footer-company-address">Designing the spaces of tomorrow through a lens of timeless minimalism and uncompromising
+                        quality.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#about">Studio</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="admin/index.html">Admin Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Social</h4>
+                    <ul id="footer-social-links">
+                        <li><a href="#" id="link-instagram">Instagram</a></li>
+                        <li><a href="#" id="link-linkedin">LinkedIn</a></li>
+                        <li><a href="#" id="link-pinterest">Pinterest</a></li>
+                        <li><a href="#" id="link-twitter">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Paradigma Architects. All rights reserved.</p>
+                <p>Designed with precision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // Inline script for number counter animation in About section
+        gsap.utils.toArray('.stat-item').forEach(item => {
+            let counter = item.querySelector('.counter');
+            let target = parseInt(counter.getAttribute('data-target'));
+
+            ScrollTrigger.create({
+                trigger: item,
+                start: "top 80%",
+                onEnter: () => {
+                    let obj = { val: 0 };
+                    gsap.to(obj, {
+                        val: target,
+                        duration: 2,
+                        ease: "power2.out",
+                        onUpdate: () => {
+                            counter.innerHTML = Math.floor(obj.val) + (target > 100 ? "+" : "");
+                        }
+                    });
+                },
+                once: true
+            });
+        });
+
+        // Project filtering mock
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                let filter = btn.getAttribute('data-filter');
+                let cards = document.querySelectorAll('.project-card');
+
+                gsap.to(cards, {
+                    opacity: 0,
+                    scale: 0.9,
+                    duration: 0.3,
+                    stagger: 0.05,
+                    onComplete: () => {
+                        cards.forEach(card => {
+                            if (filter === 'all' || card.classList.contains(filter)) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                        gsap.to(cards, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.3,
+                            stagger: 0.05,
+                            clearProps: "all"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
